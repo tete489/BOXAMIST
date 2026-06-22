@@ -7,341 +7,176 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #0d0d0d;
-      --surface:   #161616;
-      --card:      #1c1c1c;
-      --border:    #2a2a2a;
-      --red:       #e8001c;
-      --red-dim:   #9b0014;
-      --gold:      #c9a84c;
-      --text:      #f0f0f0;
-      --muted:     #888;
-      --font-disp: 'Bebas Neue', sans-serif;
-      --font-body: 'Inter', sans-serif;
+      --bg: #0d0d0d; --surface: #161616; --card: #1c1c1c;
+      --border: #2a2a2a; --red: #e8001c; --red-dim: #9b0014;
+      --gold: #c9a84c; --text: #f0f0f0; --muted: #888;
+      --font-disp: 'Bebas Neue', sans-serif; --font-body: 'Inter', sans-serif;
     }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      min-height: 100vh;
-    }
-
-    /* ── AUTH OVERLAY ── */
+    /* AUTH */
     #auth-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95);
       display: flex; align-items: center; justify-content: center;
-      z-index: 999;
-      backdrop-filter: blur(6px);
+      z-index: 999; backdrop-filter: blur(6px);
     }
-
     .auth-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 3px solid var(--red);
-      padding: 40px 36px;
-      width: 100%; max-width: 380px;
-      border-radius: 4px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-top: 3px solid var(--red); padding: 40px 36px;
+      width: 100%; max-width: 380px; border-radius: 4px;
     }
-
-    .auth-logo {
-      font-family: var(--font-disp);
-      font-size: 2.6rem;
-      letter-spacing: 3px;
-      color: var(--text);
-      text-align: center;
-      margin-bottom: 4px;
-    }
-
+    .auth-logo { font-family: var(--font-disp); font-size: 2.6rem; letter-spacing: 3px; color: var(--text); text-align: center; margin-bottom: 4px; }
     .auth-logo span { color: var(--red); }
-
-    .auth-tagline {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-
-    .auth-tabs {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 28px;
-    }
-
-    .auth-tab {
-      flex: 1;
-      background: none; border: none;
-      color: var(--muted);
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 10px 0;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color .2s, border-color .2s;
-    }
-
-    .auth-tab.active {
-      color: var(--red);
-      border-bottom-color: var(--red);
-    }
-
+    .auth-tagline { text-align: center; color: var(--muted); font-size: .75rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
+    .auth-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+    .auth-tab { flex: 1; background: none; border: none; color: var(--muted); font-family: var(--font-body); font-size: .8rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 0; cursor: pointer; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+    .auth-tab.active { color: var(--red); border-bottom-color: var(--red); }
     .auth-form { display: flex; flex-direction: column; gap: 14px; }
     .auth-form.hidden { display: none; }
-
-    .auth-form input {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      padding: 12px 14px;
-      border-radius: 3px;
-      outline: none;
-      transition: border-color .2s;
-    }
-
+    .auth-form input { background: var(--card); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: .9rem; padding: 12px 14px; border-radius: 3px; outline: none; transition: border-color .2s; }
     .auth-form input:focus { border-color: var(--red); }
     .auth-form input::placeholder { color: var(--muted); }
-
-    .btn-auth {
-      background: var(--red);
-      color: #fff;
-      border: none;
-      padding: 13px;
-      font-family: var(--font-disp);
-      font-size: 1.1rem;
-      letter-spacing: 2px;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: background .2s;
-      margin-top: 4px;
-    }
-
+    .btn-auth { background: var(--red); color: #fff; border: none; padding: 13px; font-family: var(--font-disp); font-size: 1.1rem; letter-spacing: 2px; border-radius: 3px; cursor: pointer; transition: background .2s; margin-top: 4px; }
     .btn-auth:hover { background: #ff001f; }
+    .auth-error { color: var(--red); font-size: .78rem; text-align: center; min-height: 18px; }
 
-    .auth-error {
-      color: var(--red);
-      font-size: 0.78rem;
-      text-align: center;
-      min-height: 18px;
-    }
-
-    /* ── MAIN APP ── */
+    /* HEADER */
     #app { display: none; }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 20px;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 58px;
-      position: sticky; top: 0; z-index: 10;
-    }
-
-    .logo {
-      font-family: var(--font-disp);
-      font-size: 1.9rem;
-      letter-spacing: 3px;
-      color: var(--text);
-      line-height: 1;
-    }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 58px; position: sticky; top: 0; z-index: 10; }
+    .logo { font-family: var(--font-disp); font-size: 1.9rem; letter-spacing: 3px; color: var(--text); line-height: 1; }
     .logo span { color: var(--red); }
-
-    .header-right {
-      display: flex; align-items: center; gap: 14px;
-    }
-
-    .user-badge {
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 1px;
-    }
-
-    .btn-logout {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: var(--font-body);
-      font-size: 0.72rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 6px 12px;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: border-color .2s, color .2s;
-    }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .user-badge { font-size: .78rem; color: var(--muted); letter-spacing: 1px; }
+    .btn-logout { background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--font-body); font-size: .72rem; letter-spacing: 1px; text-transform: uppercase; padding: 6px 12px; border-radius: 3px; cursor: pointer; transition: border-color .2s, color .2s; }
     .btn-logout:hover { border-color: var(--red); color: var(--red); }
 
-    /* ── SECTION LABEL ── */
-    .section-label {
-      display: flex; align-items: center; gap: 10px;
-      padding: 28px 20px 14px;
-    }
+    /* SECTION */
+    .section-label { display: flex; align-items: center; gap: 10px; padding: 28px 20px 14px; }
+    .section-label h2 { font-family: var(--font-disp); font-size: 1.05rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    .section-label h2 {
-      font-family: var(--font-disp);
-      font-size: 1.05rem;
-      letter-spacing: 3px;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ── FIGHT CARD ── */
-    .fights-list {
-      padding: 0 20px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
+    /* FIGHT LIST */
+    .fights-list { padding: 0 20px 40px; display: flex; flex-direction: column; gap: 2px; }
     .fight-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--red-dim);
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      padding: 16px 18px;
-      border-radius: 2px;
-      transition: border-left-color .2s, background .2s;
-      gap: 12px;
+      background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--red-dim);
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      padding: 16px 18px; border-radius: 2px; cursor: pointer;
+      transition: border-left-color .2s, background .2s; gap: 12px;
     }
+    .fight-card:hover { border-left-color: var(--red); background: #202020; }
+    .fighter { display: flex; align-items: center; gap: 12px; }
+    .fighter.right { flex-direction: row-reverse; text-align: right; }
+    .fighter-img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); background: var(--border); flex-shrink: 0; }
+    .fighter-name { font-family: var(--font-disp); font-size: 1.15rem; letter-spacing: 1px; color: var(--text); line-height: 1.2; }
+    .fighter-country { font-size: .7rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+    .fight-center { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 90px; }
+    .fight-vs { font-family: var(--font-disp); font-size: 1.3rem; color: var(--red); letter-spacing: 2px; }
+    .fight-time { font-size: .78rem; font-weight: 600; color: var(--gold); letter-spacing: 1px; }
+    .fight-date { font-size: .68rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+    .fight-belt { font-size: .62rem; color: var(--gold); border: 1px solid var(--gold); padding: 2px 6px; border-radius: 2px; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
-    .fight-card:hover {
-      border-left-color: var(--red);
-      background: #202020;
+    /* MODAL */
+    #modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      display: none; align-items: center; justify-content: center;
+      z-index: 500; backdrop-filter: blur(4px); padding: 16px;
     }
-
-    .fighter {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    #modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-top: 3px solid var(--red); border-radius: 4px;
+      width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
     }
-
-    .fighter.right {
-      flex-direction: row-reverse;
-      text-align: right;
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
     }
+    .modal-title { font-family: var(--font-disp); font-size: 1rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; line-height: 1; padding: 2px 6px; }
+    .modal-close:hover { color: var(--red); }
 
-    .fighter-img {
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--border);
-      background: var(--border);
-      flex-shrink: 0;
+    /* FIGHTERS DETAIL */
+    .modal-fighters {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 12px; padding: 24px 20px; align-items: start;
     }
+    .modal-fighter { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .modal-fighter.right { align-items: center; }
+    .modal-fighter-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); background: var(--border); }
+    .modal-fighter-name { font-family: var(--font-disp); font-size: 1.2rem; letter-spacing: 1px; text-align: center; }
+    .modal-fighter-country { font-size: .68rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+    .modal-stats { width: 100%; margin-top: 4px; }
+    .stat-row { display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); padding: 3px 0; border-bottom: 1px solid var(--border); }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-val { color: var(--text); font-weight: 600; }
+    .modal-vs-col { display: flex; align-items: center; justify-content: center; padding-top: 50px; }
+    .modal-vs { font-family: var(--font-disp); font-size: 1.5rem; color: var(--red); }
 
-    .fighter-name {
-      font-family: var(--font-disp);
-      font-size: 1.15rem;
-      letter-spacing: 1px;
-      color: var(--text);
-      line-height: 1.2;
+    /* FIGHT INFO BAR */
+    .modal-info {
+      display: flex; justify-content: center; gap: 24px;
+      padding: 12px 20px; background: var(--card);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
     }
+    .info-item { text-align: center; }
+    .info-label { font-size: .62rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+    .info-val { font-size: .88rem; font-weight: 600; color: var(--gold); margin-top: 2px; }
 
-    .fighter-country {
-      font-size: 0.7rem;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-
-    .fight-center {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      min-width: 90px;
-    }
-
-    .fight-vs {
-      font-family: var(--font-disp);
-      font-size: 1.3rem;
-      color: var(--red);
-      letter-spacing: 2px;
-    }
-
-    .fight-time {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 1px;
-    }
-
-    .fight-date {
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .fight-belt {
-      font-size: 0.62rem;
-      color: var(--gold);
-      border: 1px solid var(--gold);
-      padding: 2px 6px;
-      border-radius: 2px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-
-    /* ── EMPTY STATE ── */
-    .empty {
+    /* VOTING */
+    .modal-vote { padding: 20px; }
+    .vote-title { font-family: var(--font-disp); font-size: .95rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; text-align: center; }
+    .vote-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .vote-btn {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-disp); font-size: .95rem;
+      letter-spacing: 1px; padding: 12px 8px; border-radius: 3px;
+      cursor: pointer; transition: background .2s, border-color .2s;
       text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      letter-spacing: 1px;
     }
+    .vote-btn:hover { border-color: var(--red); }
+    .vote-btn.voted-1 { background: rgba(232,0,28,.15); border-color: var(--red); color: var(--red); }
+    .vote-btn.voted-2 { background: rgba(201,168,76,.15); border-color: var(--gold); color: var(--gold); }
+    .vote-btn:disabled { cursor: default; }
+
+    /* VOTE BAR */
+    .vote-bar-wrap { margin-top: 4px; }
+    .vote-bar-labels { display: flex; justify-content: space-between; font-size: .7rem; color: var(--muted); margin-bottom: 6px; }
+    .vote-bar-track { height: 12px; background: var(--card); border-radius: 6px; overflow: hidden; display: flex; border: 1px solid var(--border); }
+    .vote-bar-left { height: 100%; background: var(--red); transition: width .5s ease; }
+    .vote-bar-right { height: 100%; background: var(--gold); transition: width .5s ease; }
+    .vote-bar-pcts { display: flex; justify-content: space-between; font-size: .75rem; font-weight: 700; margin-top: 6px; }
+    .pct-left { color: var(--red); }
+    .pct-right { color: var(--gold); }
+    .vote-total { text-align: center; font-size: .68rem; color: var(--muted); margin-top: 6px; }
 
     @media (max-width: 520px) {
-      .fighter-name { font-size: 0.95rem; }
+      .fighter-name { font-size: .95rem; }
       .fighter-img { width: 40px; height: 40px; }
       .fight-center { min-width: 70px; }
       .fight-card { padding: 12px 10px; gap: 6px; }
+      .modal-fighter-img { width: 60px; height: 60px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════ AUTH OVERLAY ══════════════ -->
+<!-- AUTH -->
 <div id="auth-overlay">
   <div class="auth-box">
     <div class="auth-logo">BOX<span>A</span>MIST</div>
     <div class="auth-tagline">Próximos combates de boxeo</div>
-
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
       <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
     </div>
-
-    <!-- LOGIN -->
     <div class="auth-form" id="login-form">
       <input type="text" id="login-user" placeholder="Usuario" autocomplete="username"/>
       <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password"/>
       <div class="auth-error" id="login-error"></div>
       <button class="btn-auth" onclick="doLogin()">ENTRAR</button>
     </div>
-
-    <!-- REGISTER -->
     <div class="auth-form hidden" id="register-form">
       <input type="text" id="reg-user" placeholder="Usuario" autocomplete="username"/>
       <input type="email" id="reg-email" placeholder="Email"/>
@@ -352,7 +187,73 @@
   </div>
 </div>
 
-<!-- ══════════════ MAIN APP ══════════════ -->
+<!-- MODAL -->
+<div id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-belt-label"></span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-fighters">
+      <!-- Peleador 1 -->
+      <div class="modal-fighter">
+        <img class="modal-fighter-img" id="m-img1" src="" alt=""/>
+        <div class="modal-fighter-name" id="m-name1"></div>
+        <div class="modal-fighter-country" id="m-country1"></div>
+        <div class="modal-stats">
+          <div class="stat-row"><span>Altura</span><span class="stat-val" id="m-height1"></span></div>
+          <div class="stat-row"><span>Peso</span><span class="stat-val" id="m-weight1"></span></div>
+          <div class="stat-row"><span>Alcance</span><span class="stat-val" id="m-reach1"></span></div>
+          <div class="stat-row"><span>Récord</span><span class="stat-val" id="m-record1"></span></div>
+        </div>
+      </div>
+      <!-- VS -->
+      <div class="modal-vs-col"><div class="modal-vs">VS</div></div>
+      <!-- Peleador 2 -->
+      <div class="modal-fighter right">
+        <img class="modal-fighter-img" id="m-img2" src="" alt=""/>
+        <div class="modal-fighter-name" id="m-name2"></div>
+        <div class="modal-fighter-country" id="m-country2"></div>
+        <div class="modal-stats">
+          <div class="stat-row"><span>Altura</span><span class="stat-val" id="m-height2"></span></div>
+          <div class="stat-row"><span>Peso</span><span class="stat-val" id="m-weight2"></span></div>
+          <div class="stat-row"><span>Alcance</span><span class="stat-val" id="m-reach2"></span></div>
+          <div class="stat-row"><span>Récord</span><span class="stat-val" id="m-record2"></span></div>
+        </div>
+      </div>
+    </div>
+    <!-- INFO BAR -->
+    <div class="modal-info">
+      <div class="info-item"><div class="info-label">Fecha</div><div class="info-val" id="m-date"></div></div>
+      <div class="info-item"><div class="info-label">Hora</div><div class="info-val" id="m-time"></div></div>
+      <div class="info-item"><div class="info-label">Categoría</div><div class="info-val" id="m-cat"></div></div>
+    </div>
+    <!-- VOTACIÓN -->
+    <div class="modal-vote">
+      <div class="vote-title">¿Quién va a ganar?</div>
+      <div class="vote-btns">
+        <button class="vote-btn" id="vote-btn-1" onclick="castVote(1)"></button>
+        <button class="vote-btn" id="vote-btn-2" onclick="castVote(2)"></button>
+      </div>
+      <div class="vote-bar-wrap">
+        <div class="vote-bar-labels">
+          <span id="vbl-1"></span><span id="vbl-2"></span>
+        </div>
+        <div class="vote-bar-track">
+          <div class="vote-bar-left" id="bar-left" style="width:50%"></div>
+          <div class="vote-bar-right" id="bar-right" style="width:50%"></div>
+        </div>
+        <div class="vote-bar-pcts">
+          <span class="pct-left" id="pct-left">50%</span>
+          <span class="pct-right" id="pct-right">50%</span>
+        </div>
+        <div class="vote-total" id="vote-total">0 votos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
 <div id="app">
   <header>
     <div class="logo">BOX<span>A</span>MIST</div>
@@ -361,182 +262,274 @@
       <button class="btn-logout" onclick="doLogout()">Salir</button>
     </div>
   </header>
-
-  <div class="section-label">
-    <h2>Próximos Combates</h2>
-  </div>
-
-  <div class="fights-list" id="fights-list">
-    <!-- ══════════════════════════════════════════════
-         AÑADE O EDITA COMBATES AQUÍ ABAJO
-         Copia el bloque .fight-card y cambia:
-           ALEJANDRO    → nombre del peleador local
-           (LINK IMAGEN 1)        → URL de la foto del peleador local
-           0-0-0               → país/ciudad del peleador local
-           JOSE ANTONIO    → nombre del peleador visitante
-           (LINK IMAGEN 2)        → URL de la foto del peleador visitante
-           0-0-0               → país/ciudad del peleador visitante
-           sin hora         → hora, p.ej. 22:00
-           septiembre        → fecha, p.ej. 28 JUN 2026
-           CUMPLE LAMINE      → si es título mundial, p.ej. "WBC Superligero"
-                                    Si no hay título, borra esa línea
-    ═══════════════════════════════════════════════ -->
-
-    <!-- COMBATE 1 -->
-    <div class="fight-card">
-      <div class="fighter">
-        <img class="fighter-img" src="(LINK IMAGEN 1)" alt="(NOMBRE PELEADOR 1)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
-        <div>
-          <div class="fighter-name">ALEJANDRO DE DIOS</div>
-          <div class="fighter-country">0-0-0</div>
-        </div>
-      </div>
-      <div class="fight-center">
-        <div class="fight-vs">VS</div>
-        <div class="fight-time">(sin hora)</div>
-        <div class="fight-date">SEPTIEMBRE</div>
-        <div class="fight-belt">FIESTA 304</div>
-      </div>
-      <div class="fighter right">
-        <img class="fighter-img" src="(LINK IMAGEN 2)" alt="(NOMBRE PELEADOR 2)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
-        <div>
-          <div class="fighter-name">JOSE ANTONIO RODRIGUEZ</div>
-          <div class="fighter-country">0-0-0</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- COMBATE 2 -->
-    <div class="fight-card">
-      <div class="fighter">
-        <img class="fighter-img" src="(LINK IMAGEN 1)" alt="(NOMBRE PELEADOR 1)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
-        <div>
-          <div class="fighter-name">JOSE ALBERTO GRIFOL</div>
-          <div class="fighter-country">0-0-0</div>
-        </div>
-      </div>
-      <div class="fight-center">
-        <div class="fight-vs">VS</div>
-        <div class="fight-time">(sin hora)</div>
-        <div class="fight-date">SEPTIEMBRE</div>
-        <!-- Sin título → borra la línea siguiente -->
-        <div class="fight-belt">EL KEBAB</div>
-      </div>
-      <div class="fighter right">
-        <img class="fighter-img" src="(LINK IMAGEN 2)" alt="(NOMBRE PELEADOR 2)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
-        <div>
-          <div class="fighter-name">LUCAS DASI</div>
-          <div class="fighter-country">0-0-0</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- COMBATE 3 -->
-    <div class="fight-card">
-      <div class="fighter">
-        <img class="fighter-img" src="(LINK IMAGEN 1)" alt="(NOMBRE PELEADOR 1)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
-        <div>
-          <div class="fighter-name">PLAZA</div>
-          <div class="fighter-country">0-0-0</div>
-        </div>
-      </div>
-      <div class="fight-center">
-        <div class="fight-vs">VS</div>
-        <div class="fight-time">(sin hora)</div>
-        <div class="fight-date">SEPTIEMBRE</div>
-        <div class="fight-belt">(TITULO OPCIONAL)</div>
-      </div>
-      <div class="fighter right">
-        <img class="fighter-img" src="(LINK IMAGEN 2)" alt="(NOMBRE PELEADOR 2)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
-        <div>
-          <div class="fighter-name">PLAZA</div>
-          <div class="fighter-country">0-0-0</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Para añadir más combates, copia cualquier bloque de arriba -->
-  </div>
+  <div class="section-label"><h2>Próximos Combates</h2></div>
+  <div class="fights-list" id="fights-list"></div>
 </div>
 
 <script>
-  // ── USUARIOS (guardados en localStorage) ──
-  function getUsers() {
-    return JSON.parse(localStorage.getItem('bx_users') || '{}');
+// ═══════════════════════════════════════════════════
+//  COMBATES — EDITA AQUÍ
+//  Copia un bloque { } y rellena los campos.
+//  Para el campo "belt": si no hay título, pon ""
+// ═══════════════════════════════════════════════════
+const FIGHTS = [
+  {
+    id: "combate1",
+    // PELEADOR 1
+    name1:    "(NOMBRE PELEADOR 1)",
+    img1:     "(LINK IMAGEN 1)",
+    country1: "(PAIS 1)",
+    height1:  "(ALTURA 1)",       // ej: 1.73 m
+    weight1:  "(PESO 1)",         // ej: 73 kg
+    reach1:   "(ALCANCE 1)",      // ej: 179 cm
+    record1:  "(RECORD 1)",       // ej: 60-2-0
+    // PELEADOR 2
+    name2:    "(NOMBRE PELEADOR 2)",
+    img2:     "(LINK IMAGEN 2)",
+    country2: "(PAIS 2)",
+    height2:  "(ALTURA 2)",
+    weight2:  "(PESO 2)",
+    reach2:   "(ALCANCE 2)",
+    record2:  "(RECORD 2)",
+    // COMBATE
+    date:     "(FECHA)",          // ej: 28 JUN 2026
+    time:     "(HORA)",           // ej: 22:00
+    category: "(CATEGORIA)",      // ej: Supermediano
+    belt:     "(TITULO)"          // ej: WBC · Mundial  — o "" si no hay
+  },
+  {
+    id: "combate2",
+    name1:    "(NOMBRE PELEADOR 1)",
+    img1:     "(LINK IMAGEN 1)",
+    country1: "(PAIS 1)",
+    height1:  "(ALTURA 1)",
+    weight1:  "(PESO 1)",
+    reach1:   "(ALCANCE 1)",
+    record1:  "(RECORD 1)",
+    name2:    "(NOMBRE PELEADOR 2)",
+    img2:     "(LINK IMAGEN 2)",
+    country2: "(PAIS 2)",
+    height2:  "(ALTURA 2)",
+    weight2:  "(PESO 2)",
+    reach2:   "(ALCANCE 2)",
+    record2:  "(RECORD 2)",
+    date:     "(FECHA)",
+    time:     "(HORA)",
+    category: "(CATEGORIA)",
+    belt:     ""
+  },
+  {
+    id: "combate3",
+    name1:    "(NOMBRE PELEADOR 1)",
+    img1:     "(LINK IMAGEN 1)",
+    country1: "(PAIS 1)",
+    height1:  "(ALTURA 1)",
+    weight1:  "(PESO 1)",
+    reach1:   "(ALCANCE 1)",
+    record1:  "(RECORD 1)",
+    name2:    "(NOMBRE PELEADOR 2)",
+    img2:     "(LINK IMAGEN 2)",
+    country2: "(PAIS 2)",
+    height2:  "(ALTURA 2)",
+    weight2:  "(PESO 2)",
+    reach2:   "(ALCANCE 2)",
+    record2:  "(RECORD 2)",
+    date:     "(FECHA)",
+    time:     "(HORA)",
+    category: "(CATEGORIA)",
+    belt:     ""
   }
-  function saveUsers(u) {
-    localStorage.setItem('bx_users', JSON.stringify(u));
-  }
+];
+// ═══════════════════════════════════════════════════
 
-  // ── SESIÓN ──
-  function getSession() {
-    return localStorage.getItem('bx_session');
-  }
-  function setSession(user) {
-    localStorage.setItem('bx_session', user);
-  }
-  function clearSession() {
-    localStorage.removeItem('bx_session');
-  }
+let currentFight = null;
 
-  // ── TABS ──
-  function switchTab(tab) {
-    document.querySelectorAll('.auth-tab').forEach((t,i) => {
-      t.classList.toggle('active', (tab==='login' ? i===0 : i===1));
-    });
-    document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
-    document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
-    document.getElementById('login-error').textContent = '';
-    document.getElementById('reg-error').textContent = '';
-  }
+// ── RENDER FIGHTS ──
+function renderFights() {
+  const list = document.getElementById('fights-list');
+  list.innerHTML = FIGHTS.map(f => `
+    <div class="fight-card" onclick="openModal('${f.id}')">
+      <div class="fighter">
+        <img class="fighter-img" src="${f.img1}" alt="${f.name1}" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">${f.name1}</div>
+          <div class="fighter-country">${f.country1}</div>
+        </div>
+      </div>
+      <div class="fight-center">
+        <div class="fight-vs">VS</div>
+        <div class="fight-time">${f.time}</div>
+        <div class="fight-date">${f.date}</div>
+        ${f.belt ? `<div class="fight-belt">${f.belt}</div>` : ''}
+      </div>
+      <div class="fighter right">
+        <img class="fighter-img" src="${f.img2}" alt="${f.name2}" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">${f.name2}</div>
+          <div class="fighter-country">${f.country2}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
 
-  // ── REGISTRO ──
-  function doRegister() {
-    const u = document.getElementById('reg-user').value.trim();
-    const p = document.getElementById('reg-pass').value;
-    const err = document.getElementById('reg-error');
-    if (!u || !p) { err.textContent = 'Completa todos los campos.'; return; }
-    if (u.length < 3) { err.textContent = 'El usuario debe tener al menos 3 caracteres.'; return; }
-    if (p.length < 4) { err.textContent = 'La contraseña debe tener al menos 4 caracteres.'; return; }
-    const users = getUsers();
-    if (users[u]) { err.textContent = 'Ese usuario ya existe.'; return; }
-    users[u] = p;
-    saveUsers(users);
-    setSession(u);
-    showApp(u);
-  }
+// ── VOTES ──
+function getVotes(fightId) {
+  const v = JSON.parse(localStorage.getItem('bx_votes_' + fightId) || '{"v1":0,"v2":0}');
+  return v;
+}
+function saveVotes(fightId, v) {
+  localStorage.setItem('bx_votes_' + fightId, JSON.stringify(v));
+}
+function getUserVote(fightId) {
+  const user = getSession();
+  const key = 'bx_uservote_' + fightId + '_' + user;
+  return localStorage.getItem(key); // "1" o "2" o null
+}
+function setUserVote(fightId, side) {
+  const user = getSession();
+  const key = 'bx_uservote_' + fightId + '_' + user;
+  localStorage.setItem(key, String(side));
+}
 
-  // ── LOGIN ──
-  function doLogin() {
-    const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value;
-    const err = document.getElementById('login-error');
-    if (!u || !p) { err.textContent = 'Introduce usuario y contraseña.'; return; }
-    const users = getUsers();
-    if (!users[u] || users[u] !== p) { err.textContent = 'Usuario o contraseña incorrectos.'; return; }
-    setSession(u);
-    showApp(u);
-  }
+function updateVoteUI(fightId) {
+  const v = getVotes(fightId);
+  const total = v.v1 + v.v2;
+  const pct1 = total === 0 ? 50 : Math.round((v.v1 / total) * 100);
+  const pct2 = 100 - pct1;
+  document.getElementById('bar-left').style.width = pct1 + '%';
+  document.getElementById('bar-right').style.width = pct2 + '%';
+  document.getElementById('pct-left').textContent = pct1 + '%';
+  document.getElementById('pct-right').textContent = pct2 + '%';
+  document.getElementById('vote-total').textContent = total + (total === 1 ? ' voto' : ' votos');
 
-  // ── LOGOUT ──
-  function doLogout() {
-    clearSession();
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('auth-overlay').style.display = 'flex';
+  const userVote = getUserVote(fightId);
+  const b1 = document.getElementById('vote-btn-1');
+  const b2 = document.getElementById('vote-btn-2');
+  if (userVote) {
+    b1.disabled = true; b2.disabled = true;
+    b1.className = 'vote-btn' + (userVote === '1' ? ' voted-1' : '');
+    b2.className = 'vote-btn' + (userVote === '2' ? ' voted-2' : '');
   }
+}
 
-  // ── MOSTRAR APP ──
-  function showApp(user) {
-    document.getElementById('auth-overlay').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    document.getElementById('header-user').textContent = user.toUpperCase();
-  }
+function castVote(side) {
+  if (!currentFight) return;
+  if (getUserVote(currentFight.id)) return;
+  const v = getVotes(currentFight.id);
+  if (side === 1) v.v1++; else v.v2++;
+  saveVotes(currentFight.id, v);
+  setUserVote(currentFight.id, side);
+  updateVoteUI(currentFight.id);
+}
 
-  // ── AUTO-LOGIN si hay sesión guardada ──
-  (function() {
-    const s = getSession();
-    if (s) showApp(s);
-  })();
+// ── MODAL ──
+function openModal(fightId) {
+  const f = FIGHTS.find(x => x.id === fightId);
+  if (!f) return;
+  currentFight = f;
+
+  document.getElementById('modal-belt-label').textContent = f.belt || f.category;
+  document.getElementById('m-img1').src = f.img1;
+  document.getElementById('m-img1').alt = f.name1;
+  document.getElementById('m-name1').textContent = f.name1;
+  document.getElementById('m-country1').textContent = f.country1;
+  document.getElementById('m-height1').textContent = f.height1;
+  document.getElementById('m-weight1').textContent = f.weight1;
+  document.getElementById('m-reach1').textContent = f.reach1;
+  document.getElementById('m-record1').textContent = f.record1;
+
+  document.getElementById('m-img2').src = f.img2;
+  document.getElementById('m-img2').alt = f.name2;
+  document.getElementById('m-name2').textContent = f.name2;
+  document.getElementById('m-country2').textContent = f.country2;
+  document.getElementById('m-height2').textContent = f.height2;
+  document.getElementById('m-weight2').textContent = f.weight2;
+  document.getElementById('m-reach2').textContent = f.reach2;
+  document.getElementById('m-record2').textContent = f.record2;
+
+  document.getElementById('m-date').textContent = f.date;
+  document.getElementById('m-time').textContent = f.time;
+  document.getElementById('m-cat').textContent = f.category;
+
+  document.getElementById('vote-btn-1').textContent = f.name1;
+  document.getElementById('vote-btn-2').textContent = f.name2;
+  document.getElementById('vbl-1').textContent = f.name1;
+  document.getElementById('vbl-2').textContent = f.name2;
+
+  // reset btn classes
+  document.getElementById('vote-btn-1').className = 'vote-btn';
+  document.getElementById('vote-btn-2').className = 'vote-btn';
+  document.getElementById('vote-btn-1').disabled = false;
+  document.getElementById('vote-btn-2').disabled = false;
+
+  updateVoteUI(fightId);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  currentFight = null;
+}
+
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── AUTH ──
+function getUsers() { return JSON.parse(localStorage.getItem('bx_users') || '{}'); }
+function saveUsers(u) { localStorage.setItem('bx_users', JSON.stringify(u)); }
+function getSession() { return localStorage.getItem('bx_session'); }
+function setSession(u) { localStorage.setItem('bx_session', u); }
+function clearSession() { localStorage.removeItem('bx_session'); }
+
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', tab==='login' ? i===0 : i===1));
+  document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('reg-error').textContent = '';
+}
+
+function doRegister() {
+  const u = document.getElementById('reg-user').value.trim();
+  const p = document.getElementById('reg-pass').value;
+  const err = document.getElementById('reg-error');
+  if (!u || !p) { err.textContent = 'Completa todos los campos.'; return; }
+  if (u.length < 3) { err.textContent = 'Usuario mínimo 3 caracteres.'; return; }
+  if (p.length < 4) { err.textContent = 'Contraseña mínimo 4 caracteres.'; return; }
+  const users = getUsers();
+  if (users[u]) { err.textContent = 'Ese usuario ya existe.'; return; }
+  users[u] = p; saveUsers(users); setSession(u); showApp(u);
+}
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  if (!u || !p) { err.textContent = 'Introduce usuario y contraseña.'; return; }
+  const users = getUsers();
+  if (!users[u] || users[u] !== p) { err.textContent = 'Usuario o contraseña incorrectos.'; return; }
+  setSession(u); showApp(u);
+}
+
+function doLogout() {
+  clearSession();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-overlay').style.display = 'flex';
+}
+
+function showApp(user) {
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('header-user').textContent = user.toUpperCase();
+  renderFights();
+}
+
+(function() {
+  const s = getSession();
+  if (s) showApp(s);
+})();
 </script>
 </body>
 </html>
