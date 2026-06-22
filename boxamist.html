@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BOXAMIST</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0d;
+      --surface:   #161616;
+      --card:      #1c1c1c;
+      --border:    #2a2a2a;
+      --red:       #e8001c;
+      --red-dim:   #9b0014;
+      --gold:      #c9a84c;
+      --text:      #f0f0f0;
+      --muted:     #888;
+      --font-disp: 'Bebas Neue', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+    }
+
+    /* ── AUTH OVERLAY ── */
+    #auth-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.95);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+      backdrop-filter: blur(6px);
+    }
+
+    .auth-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--red);
+      padding: 40px 36px;
+      width: 100%; max-width: 380px;
+      border-radius: 4px;
+    }
+
+    .auth-logo {
+      font-family: var(--font-disp);
+      font-size: 2.6rem;
+      letter-spacing: 3px;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .auth-logo span { color: var(--red); }
+
+    .auth-tagline {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      background: none; border: none;
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 10px 0;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+
+    .auth-tab.active {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+
+    .auth-form { display: flex; flex-direction: column; gap: 14px; }
+    .auth-form.hidden { display: none; }
+
+    .auth-form input {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 12px 14px;
+      border-radius: 3px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .auth-form input:focus { border-color: var(--red); }
+    .auth-form input::placeholder { color: var(--muted); }
+
+    .btn-auth {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 13px;
+      font-family: var(--font-disp);
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background .2s;
+      margin-top: 4px;
+    }
+
+    .btn-auth:hover { background: #ff001f; }
+
+    .auth-error {
+      color: var(--red);
+      font-size: 0.78rem;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    /* ── MAIN APP ── */
+    #app { display: none; }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px;
+      position: sticky; top: 0; z-index: 10;
+    }
+
+    .logo {
+      font-family: var(--font-disp);
+      font-size: 1.9rem;
+      letter-spacing: 3px;
+      color: var(--text);
+      line-height: 1;
+    }
+    .logo span { color: var(--red); }
+
+    .header-right {
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    .user-badge {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .btn-logout {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      display: flex; align-items: center; gap: 10px;
+      padding: 28px 20px 14px;
+    }
+
+    .section-label h2 {
+      font-family: var(--font-disp);
+      font-size: 1.05rem;
+      letter-spacing: 3px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── FIGHT CARD ── */
+    .fights-list {
+      padding: 0 20px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .fight-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--red-dim);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 16px 18px;
+      border-radius: 2px;
+      transition: border-left-color .2s, background .2s;
+      gap: 12px;
+    }
+
+    .fight-card:hover {
+      border-left-color: var(--red);
+      background: #202020;
+    }
+
+    .fighter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .fighter.right {
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+
+    .fighter-img {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .fighter-name {
+      font-family: var(--font-disp);
+      font-size: 1.15rem;
+      letter-spacing: 1px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .fighter-country {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .fight-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 90px;
+    }
+
+    .fight-vs {
+      font-family: var(--font-disp);
+      font-size: 1.3rem;
+      color: var(--red);
+      letter-spacing: 2px;
+    }
+
+    .fight-time {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .fight-date {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .fight-belt {
+      font-size: 0.62rem;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 2px 6px;
+      border-radius: 2px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 520px) {
+      .fighter-name { font-size: 0.95rem; }
+      .fighter-img { width: 40px; height: 40px; }
+      .fight-center { min-width: 70px; }
+      .fight-card { padding: 12px 10px; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ AUTH OVERLAY ══════════════ -->
+<div id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-logo">BOX<span>A</span>MIST</div>
+    <div class="auth-tagline">Próximos combates de boxeo</div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-form" id="login-form">
+      <input type="text" id="login-user" placeholder="Usuario" autocomplete="username"/>
+      <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password"/>
+      <div class="auth-error" id="login-error"></div>
+      <button class="btn-auth" onclick="doLogin()">ENTRAR</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="auth-form hidden" id="register-form">
+      <input type="text" id="reg-user" placeholder="Usuario" autocomplete="username"/>
+      <input type="email" id="reg-email" placeholder="Email"/>
+      <input type="password" id="reg-pass" placeholder="Contraseña" autocomplete="new-password"/>
+      <div class="auth-error" id="reg-error"></div>
+      <button class="btn-auth" onclick="doRegister()">CREAR CUENTA</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN APP ══════════════ -->
+<div id="app">
+  <header>
+    <div class="logo">BOX<span>A</span>MIST</div>
+    <div class="header-right">
+      <span class="user-badge" id="header-user"></span>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
+    </div>
+  </header>
+
+  <div class="section-label">
+    <h2>Próximos Combates</h2>
+  </div>
+
+  <div class="fights-list" id="fights-list">
+    <!-- ══════════════════════════════════════════════
+         AÑADE O EDITA COMBATES AQUÍ ABAJO
+         Copia el bloque .fight-card y cambia:
+           (NOMBRE PELEADOR 1)    → nombre del peleador local
+           (LINK IMAGEN 1)        → URL de la foto del peleador local
+           (PAIS 1)               → país/ciudad del peleador local
+           (NOMBRE PELEADOR 2)    → nombre del peleador visitante
+           (LINK IMAGEN 2)        → URL de la foto del peleador visitante
+           (PAIS 2)               → país/ciudad del peleador visitante
+           (HORA COMBATE)         → hora, p.ej. 22:00
+           (FECHA COMBATE)        → fecha, p.ej. 28 JUN 2026
+           (TITULO OPCIONAL)      → si es título mundial, p.ej. "WBC Superligero"
+                                    Si no hay título, borra esa línea
+    ═══════════════════════════════════════════════ -->
+
+    <!-- COMBATE 1 -->
+    <div class="fight-card">
+      <div class="fighter">
+        <img class="fighter-img" src="(LINK IMAGEN 1)" alt="(NOMBRE PELEADOR 1)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">(NOMBRE PELEADOR 1)</div>
+          <div class="fighter-country">(PAIS 1)</div>
+        </div>
+      </div>
+      <div class="fight-center">
+        <div class="fight-vs">VS</div>
+        <div class="fight-time">(HORA COMBATE 1)</div>
+        <div class="fight-date">(FECHA COMBATE 1)</div>
+        <div class="fight-belt">(TITULO OPCIONAL)</div>
+      </div>
+      <div class="fighter right">
+        <img class="fighter-img" src="(LINK IMAGEN 2)" alt="(NOMBRE PELEADOR 2)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">(NOMBRE PELEADOR 2)</div>
+          <div class="fighter-country">(PAIS 2)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMBATE 2 -->
+    <div class="fight-card">
+      <div class="fighter">
+        <img class="fighter-img" src="(LINK IMAGEN 1)" alt="(NOMBRE PELEADOR 1)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">(NOMBRE PELEADOR 1)</div>
+          <div class="fighter-country">(PAIS 1)</div>
+        </div>
+      </div>
+      <div class="fight-center">
+        <div class="fight-vs">VS</div>
+        <div class="fight-time">(HORA COMBATE 2)</div>
+        <div class="fight-date">(FECHA COMBATE 2)</div>
+        <!-- Sin título → borra la línea siguiente -->
+        <div class="fight-belt">(TITULO OPCIONAL)</div>
+      </div>
+      <div class="fighter right">
+        <img class="fighter-img" src="(LINK IMAGEN 2)" alt="(NOMBRE PELEADOR 2)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">(NOMBRE PELEADOR 2)</div>
+          <div class="fighter-country">(PAIS 2)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMBATE 3 -->
+    <div class="fight-card">
+      <div class="fighter">
+        <img class="fighter-img" src="(LINK IMAGEN 1)" alt="(NOMBRE PELEADOR 1)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">(NOMBRE PELEADOR 1)</div>
+          <div class="fighter-country">(PAIS 1)</div>
+        </div>
+      </div>
+      <div class="fight-center">
+        <div class="fight-vs">VS</div>
+        <div class="fight-time">(HORA COMBATE 3)</div>
+        <div class="fight-date">(FECHA COMBATE 3)</div>
+        <div class="fight-belt">(TITULO OPCIONAL)</div>
+      </div>
+      <div class="fighter right">
+        <img class="fighter-img" src="(LINK IMAGEN 2)" alt="(NOMBRE PELEADOR 2)" onerror="this.src='https://via.placeholder.com/52/1c1c1c/888?text=?'"/>
+        <div>
+          <div class="fighter-name">(NOMBRE PELEADOR 2)</div>
+          <div class="fighter-country">(PAIS 2)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Para añadir más combates, copia cualquier bloque de arriba -->
+  </div>
+</div>
+
+<script>
+  // ── USUARIOS (guardados en localStorage) ──
+  function getUsers() {
+    return JSON.parse(localStorage.getItem('bx_users') || '{}');
+  }
+  function saveUsers(u) {
+    localStorage.setItem('bx_users', JSON.stringify(u));
+  }
+
+  // ── SESIÓN ──
+  function getSession() {
+    return localStorage.getItem('bx_session');
+  }
+  function setSession(user) {
+    localStorage.setItem('bx_session', user);
+  }
+  function clearSession() {
+    localStorage.removeItem('bx_session');
+  }
+
+  // ── TABS ──
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach((t,i) => {
+      t.classList.toggle('active', (tab==='login' ? i===0 : i===1));
+    });
+    document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+    document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
+    document.getElementById('login-error').textContent = '';
+    document.getElementById('reg-error').textContent = '';
+  }
+
+  // ── REGISTRO ──
+  function doRegister() {
+    const u = document.getElementById('reg-user').value.trim();
+    const p = document.getElementById('reg-pass').value;
+    const err = document.getElementById('reg-error');
+    if (!u || !p) { err.textContent = 'Completa todos los campos.'; return; }
+    if (u.length < 3) { err.textContent = 'El usuario debe tener al menos 3 caracteres.'; return; }
+    if (p.length < 4) { err.textContent = 'La contraseña debe tener al menos 4 caracteres.'; return; }
+    const users = getUsers();
+    if (users[u]) { err.textContent = 'Ese usuario ya existe.'; return; }
+    users[u] = p;
+    saveUsers(users);
+    setSession(u);
+    showApp(u);
+  }
+
+  // ── LOGIN ──
+  function doLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    const err = document.getElementById('login-error');
+    if (!u || !p) { err.textContent = 'Introduce usuario y contraseña.'; return; }
+    const users = getUsers();
+    if (!users[u] || users[u] !== p) { err.textContent = 'Usuario o contraseña incorrectos.'; return; }
+    setSession(u);
+    showApp(u);
+  }
+
+  // ── LOGOUT ──
+  function doLogout() {
+    clearSession();
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('auth-overlay').style.display = 'flex';
+  }
+
+  // ── MOSTRAR APP ──
+  function showApp(user) {
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('header-user').textContent = user.toUpperCase();
+  }
+
+  // ── AUTO-LOGIN si hay sesión guardada ──
+  (function() {
+    const s = getSession();
+    if (s) showApp(s);
+  })();
+</script>
+</body>
+</html>
